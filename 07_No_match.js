@@ -47,4 +47,4 @@ class App extends Component {
 	}
 }
 
-export defautl App
+export default App
