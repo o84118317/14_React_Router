@@ -4,7 +4,7 @@
 
 class Profile extends React.component {
 	componentDidMount() {
-		const { handle } = this..props.match.params
+		const { handle } = this.props.match.params
 
 		fetch(`https://api.twitter.com/user/${handle}`)
 			.then()
