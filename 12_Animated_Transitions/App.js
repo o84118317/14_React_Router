@@ -1,15 +1,58 @@
+import React, { Component } from 'react'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from 'react-router-dom'
+
+/* you'll need this CSS somewhere
+.fade-enter {
+  opacity: 0;
+  z-index: 1;
+}
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 250ms ease-in;
+}
+*/
+
 class App extends Component {
   render() {
     return (
       <Router>
-        <div style={styles.fill}>
-          <ul style={styles.nav}>
-            <NavLink to="/hsl/10/90/50">Red</NavLink>
-            <NavLink to="/hsl/120/100/40">Green</NavLink>
-            <NavLink to="/rgb/33/150/243">Blue</NavLink>
-            <NavLink to="/rgb/240/98/146">Pink</NavLink>
-          </ul>
-        </div>
+        <Route render={({ location }) => (
+          <div style={styles.fill}>
+            <Route exact path="/" render={() => (
+              <Redirect to="/hsl/10/90/50"/>
+            )}/>
+
+            <ul style={styles.nav}>
+              <NavLink to="/hsl/10/90/50">Red</NavLink>
+              <NavLink to="/hsl/120/100/40">Green</NavLink>
+              <NavLink to="/rgb/33/150/243">Blue</NavLink>
+              <NavLink to="/rgb/240/98/146">Pink</NavLink>
+            </ul>
+
+            <div style={styles.content}>
+              <TransitionGroup>
+                <CSSTransition
+                  key={location.key}
+                  classNames="fade"
+                  timeout={300}
+                >
+                  <Switch location={location}>
+                    <Route exact path="/hsl/:h/:s/:l" component={HSL} />
+                    <Route exact path="/rgb/:r/:g/:b" component={RGB} />
+                    <Route render={() => <div>Not Found</div>} />
+                  </Switch>
+                </CSSTransition>
+              </TransitionGroup>
+            </div>
+          </div>
+        )}/>
       </Router>
     )
   }
@@ -21,7 +64,31 @@ const NavLink = (props) => (
   </li>
 )
 
-let styles = {}
+const HSL = ({ match }) => {
+  const { params } = match
+
+  return (
+    <div style={{
+      ...styles.fill,
+      ...styles.hsl,
+      background: `hsl(${params.h}, ${params.s}%, ${params.l}%)`
+    }}>hsl({params.h}, {params.s}%, {params.l}%)</div>
+  )
+}
+
+const RGB = ({ match }) => {
+  const { params } = match
+
+  return (
+    <div style={{
+      ...styles.fill,
+      ...styles.rgb,
+      background: `rgb(${params.r}, ${params.g}, ${params.b})`
+    }}>rgb({params.r}, {params.g}, {params.b})</div>
+  )
+}
+
+const styles = {}
 
 styles.fill = {
   position: 'absolute',
@@ -29,6 +96,12 @@ styles.fill = {
   right: 0,
   top: 0,
   bottom: 0
+}
+
+styles.content = {
+  ...styles.fill,
+  top: '40px',
+  textAlign: 'center'
 }
 
 styles.nav = {
@@ -47,3 +120,19 @@ styles.navItem = {
   listStyleType: 'none',
   padding: '10px'
 }
+
+styles.hsl  = {
+  ...styles.fill,
+  color: 'white',
+  paddingTop: '20px',
+  fontSize: '30px'
+}
+
+styles.rgb  = {
+  ...styles.fill,
+  color: 'white',
+  paddingTop: '20px',
+  fontSize: '30px'
+}
+
+export default App
