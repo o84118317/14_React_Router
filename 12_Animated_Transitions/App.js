@@ -24,6 +24,8 @@ class App extends Component {
     return (
       <Router>
         <Route render={({ location }) => (
+
+
           <div style={styles.fill}>
             <Route exact path="/" render={() => (
               <Redirect to="/hsl/10/90/50"/>
@@ -52,6 +54,9 @@ class App extends Component {
               </TransitionGroup>
             </div>
           </div>
+
+
+          
         )}/>
       </Router>
     )
