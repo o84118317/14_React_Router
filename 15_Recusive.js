@@ -31,7 +31,7 @@ const Person = ( {match} ) => {
 			<ul>
 				{person.friend.map((id) => (
 					<li key={id}>
-						<Link to={`${match.url}/${Number(id)}`}>
+						<Link to={`${match.url}/${id}`}>
 							{find(id).name}
 						</Link>
 					</li>
